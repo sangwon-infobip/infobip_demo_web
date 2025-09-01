@@ -3,34 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CheckOut</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>장바구니 확인</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; margin: 0; background-color: #f4f7f6; }
+        header { background-color: #333; color: #fff; padding: 1em 0; text-align: center; }
+        header h1 { margin: 0; }
+        nav { display: flex; justify-content: center; gap: 20px; }
+        nav ul { list-style: none; padding: 0; margin: 10px 0 0 0; display: flex; gap: 20px; }
+        nav ul li a { color: #fff; text-decoration: none; font-weight: bold; }
+        main { max-width: 800px; margin: 40px auto; padding: 20px; background-color: #fff; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        footer { text-align: center; padding: 20px; margin-top: 40px; background-color: #333; color: #fff; }
+        h2 { text-align: center; margin-bottom: 30px; }
 
-    <!-- Infobip Web SDK Start -->
+        .cart-item {
+            display: grid; /* [수정] flex -> grid로 변경하여 레이아웃 관리 용이하게 함 */
+            grid-template-columns: 1fr 120px 150px;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .cart-item:last-child { border-bottom: none; }
+        .item-name { font-weight: bold; }
+
+        /* [추가] 수량 조절 버튼 스타일 */
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+            cursor: pointer;
+            font-size: 1.2rem;
+            line-height: 28px;
+        }
+        .item-quantity {
+            padding: 0 15px;
+            font-size: 1.1rem;
+        }
+
+        .item-subtotal { /* [수정] 소계 스타일 */
+            text-align: right;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .summary { margin-top: 30px; padding-top: 20px; border-top: 2px solid #333; text-align: right; }
+        .summary p { font-size: 1.5rem; font-weight: bold; margin: 0 0 20px 0; }
+        #proceed-to-payment-btn {
+            width: 100%; padding: 15px; background-color: #007bff; color: white; border: none;
+            border-radius: 5px; font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: background-color 0.3s ease;
+        }
+        #proceed-to-payment-btn:hover { background-color: #0056b3; }
+    </style>
     <script>
-    (function(e,t,n,o){e.PeopleEventsObject=o;e[o]=e[o]||{init:function(t){e[o].apiKey=t},setPerson:function(t,n){e[o].person=t;e[o].personTtl=n},forgetPerson:function(){e[o].toForgetPerson=true},track:function(){(e[o].q=e[o].q||[]).push(arguments)},updatePerson:function(t){e[o].personToUpdate={person:t}},appendToList:function(t,n){e[o].attributeToAppend={attributeName:t,attribute:n}}};var r=t.createElement("script");var s=t.getElementsByTagName("script")[0];r.async=1;r.src=n;s.parentNode.insertBefore(r,s)})
-    (window,document,'https://s3.eu-central-1.amazonaws.com/portal-cdn-production/people-events-sdk/pe.latest-2.js','pe');
-
-    pe.init('308b663d96a0bd726a753d1ab273ef1b-3574271f-f908-4119-9f5e-d7fef26938ec'); // <-- 실제 API 키를 입력하세요!
+        (function(e,t,n,o){e.PeopleEventsObject=o;e[o]=e[o]||{init:function(t){e[o].apiKey=t},setPerson:function(t,n){e[o].person=t;e[o].personTtl=n},forgetPerson:function(){e[o].toForgetPerson=true},track:function(){(e[o].q=e[o].q||[]).push(arguments)},updatePerson:function(t){e[o].personToUpdate={person:t}},appendToList:function(t,n){e[o].attributeToAppend={attributeName:t,attribute:n}}};var r=t.createElement("script");var s=t.getElementsByTagName("script")[0];r.async=1;r.src=n;s.parentNode.insertBefore(r,s)})
+        (window,document,'https://s3.eu-central-1.amazonaws.com/portal-cdn-production/people-events-sdk/pe.latest-2.js','pe');
+        pe.init('308b663d96a0bd726a753d1ab273ef1b-3574271f-f908-4119-9f5e-d7fef26938ec');
     </script>
-    <!-- Infobip Web SDK End -->
-
-    <!-- Infobip Live Chat 챗봇 Start -->
-    <script>
-    (function(I,n,f,o,b,i,p){
-    I[b]=I[b]||function(){(I[b].q=I[b].q||[]).push(arguments)};
-    I[b].t=1*new Date();i=n.createElement(f);i.async=1;i.src=o;
-    p=n.getElementsByTagName(f)[0];p.parentNode.insertBefore(i,p)})
-    (window,document,'script','https://livechat.infobip.com/widget.js','liveChat');
-
-    liveChat('init', 'e53f50d1-eb76-472a-ba8e-9f3d2cd48a41'); // 챗봇 위젯 초기화 코드
-    </script>
-    <!-- Infobip Live Chat 챗봇 End -->
-
 </head>
 <body>
     <header>
-        <h1>결제페이지</h1>
+        <h1>장바구니</h1>
         <nav>
             <ul>
                 <li><a href="index.html">홈</a></li>
@@ -38,34 +75,106 @@
             </ul>
         </nav>
     </header>
-
     <main>
-        <p>결제를 진행합니다.</p>
-        <p>총 결제 금액: ₩35,000</p>
-        <button onclick="completePurchase()">결제 완료</button>
+        <h2>주문 내역 확인</h2>
+        <div id="cart-items-container"></div>
+        <div class="summary">
+            <p>합계: <span id="total-price-display">₩0</span></p>
+            <button id="proceed-to-payment-btn">결제 페이지로 이동</button>
+        </div>
     </main>
-
     <footer>
         <p>&copy; 인포빕 데모 웹사이트</p>
     </footer>
 
-    <script src="js/script.js"></script>
     <script>
-        window.onload = function() {
-            // pe.track('Page Loaded', { page: 'Checkout', url: window.location.href });
-            console.log('Infobip: Page Loaded event tracked for Checkout page.');
-        };
-
-        function completePurchase() {
-            // 실제로는 여기에서 결제 API 호출 로직이 들어가고, 성공 시 아래 코드를 실행합니다.
-            // 데모이므로 바로 이벤트 추적 및 페이지 이동.
-
-            pe.track('CheckOut', { checkout: true });
-            console.log('결제를 시도했습니다! 이벤트가 추적되었습니다.');
-
-            // 결제 완료 이벤트 추적 후 paid.html 페이지로 리디렉션
+    document.addEventListener('DOMContentLoaded', function() {
+        // 페이지가 로드되면 즉시 장바구니 내용을 화면에 표시
+        displayCartItems();
+        
+        // 결제 페이지 이동 버튼
+        const paymentButton = document.getElementById('proceed-to-payment-btn');
+        paymentButton.addEventListener('click', function() {
             window.location.href = 'paid.html';
+        });
+    });
+
+    // 장바구니 데이터를 읽어와 화면을 다시 그리는 함수
+    function displayCartItems() {
+        const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+        const container = document.getElementById('cart-items-container');
+        const totalPriceDisplay = document.getElementById('total-price-display');
+        let totalPrice = 0;
+
+        container.innerHTML = ''; 
+
+        if (cartItems.length === 0) {
+            container.innerHTML = '<p>장바구니가 비어있습니다. 상품 페이지에서 상품을 담아주세요.</p>';
+            document.getElementById('proceed-to-payment-btn').disabled = true;
+        } else {
+            cartItems.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.classList.add('cart-item');
+                const subtotal = item.price * item.quantity;
+                totalPrice += subtotal;
+
+                // [수정] 수량 조절 버튼을 포함한 HTML 구조로 변경
+                itemElement.innerHTML = `
+                    <span class="item-name">${item.name} (${item.price.toLocaleString()}원)</span>
+                    <div class="quantity-controls">
+                        <button class="quantity-btn minus-btn" data-id="${item.id}">-</button>
+                        <span class="item-quantity">${item.quantity}</span>
+                        <button class="quantity-btn plus-btn" data-id="${item.id}">+</button>
+                    </div>
+                    <span class="item-subtotal">${subtotal.toLocaleString()}원</span>
+                `;
+                container.appendChild(itemElement);
+            });
+             document.getElementById('proceed-to-payment-btn').disabled = false;
         }
+        
+        totalPriceDisplay.textContent = `₩${totalPrice.toLocaleString()}`;
+
+        // [추가] 화면이 다시 그려진 후, 새로 생성된 버튼들에 이벤트 리스너를 추가
+        addEventListenersToButtons();
+    }
+
+    // [추가] 모든 수량 조절 버튼에 클릭 이벤트를 설정하는 함수
+    function addEventListenersToButtons() {
+        document.querySelectorAll('.plus-btn').forEach(button => {
+            button.addEventListener('click', (event) => {
+                updateCart(event.target.dataset.id, 1);
+            });
+        });
+
+        document.querySelectorAll('.minus-btn').forEach(button => {
+            button.addEventListener('click', (event) => {
+                updateCart(event.target.dataset.id, -1);
+            });
+        });
+    }
+
+    // [추가] 장바구니 수량을 업데이트하고, 0이 되면 삭제하는 함수
+    function updateCart(productId, change) {
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const productIndex = cart.findIndex(item => item.id === productId);
+
+        if (productIndex > -1) {
+            // 상품 수량 변경
+            cart[productIndex].quantity += change;
+
+            // 수량이 0 이하가 되면 장바구니에서 상품 제거
+            if (cart[productIndex].quantity <= 0) {
+                cart.splice(productIndex, 1); // 배열에서 해당 상품 삭제
+            }
+        }
+        
+        // 변경된 장바구니 정보를 localStorage에 다시 저장
+        localStorage.setItem('cart', JSON.stringify(cart));
+
+        // 화면을 새로운 정보로 다시 그림
+        displayCartItems();
+    }
     </script>
 </body>
 </html>
